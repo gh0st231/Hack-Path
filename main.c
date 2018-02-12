@@ -33,7 +33,7 @@ void        __applicatives_challenge_validate();
 void        __cryptographie_challenge_validate();
 
 void        __ptrace_me();
-void        __log_session(int nb_points);
+void        __log_session(int nb_points,int return_main);
 void        __clear_screen();
 void        __print_out_challenge();
 void        __print_out_challenge_validate();
@@ -67,7 +67,7 @@ void        __challenges_list()
   puts("\n[~] Cryptographie");
   puts("\nChoix de l'épreuve :  ");
 
-  fgets(challenges_list_buffer,BUFF_SIZE,stdin);
+  scanf("%s",challenges_list_buffer);
   switch(*challenges_list_buffer)
   {
     case '1':
@@ -103,7 +103,7 @@ void        __challenges_validate()
   puts("\n[~] Cryptographie");
   puts("\nChoix de l'épreuve :  ");
 
-  fgets(challenges_validate_buffer,BUFF_SIZE,stdin);
+  scanf("%s",challenges_validate_buffer);
   switch(*challenges_validate_buffer)
   {
     case '1':
@@ -156,8 +156,6 @@ void      __print_out_challenge(char *titre, char *indice, char *level)
 
 void      __print_out_challenge_validate(char *flag, char *title)
 {
-  __ptrace_me();
-
   char validate_buffer[BUFF_SIZE+1];
 
   puts("Entrer le flag :");
@@ -165,11 +163,14 @@ void      __print_out_challenge_validate(char *flag, char *title)
   if (strcmp(validate_buffer,flag) == 0)
   {
     printf("\nFélécitations, vous venez de valider le challenge : %s + 1pts !\n\n", title);
-    WIN_POINTS+=1;
+    WIN_POINTS++;
+    __log_session(WIN_POINTS,0);
+    exit(1);
   }
   else
   {
     puts("\nCe n'est pas le flag ! Réessayez !\n");
+    exit(1);
   }
 }
 
@@ -238,21 +239,27 @@ void        __steganographie_challenge_validate()
  CHALLENGES A VALIDER (VALIDATION) FIN
 ******************************************************************/
 
-void        __log_session(int nb_points)
+void        __log_session(int nb_points,int return_main)
 {
-  __clear_screen();
 
-  FILE *file = NULL;
   char *username = (char *) malloc(sizeof(BUFF_SIZE)*1);
   char *password  = (char *) malloc(sizeof(BUFF_SIZE)*1);
   char *user_1 = "ghozt123";
   char *pass_1 = "wow";
-
+  FILE *file = NULL;
   file = fopen("save.rip","r+");
 
-  fprintf(file,"user_1 : %d",nb_points);
-  fscanf(file,"+%d",nb_points);
-
+  if(return_main == 0)
+  {
+    fprintf(file,"user_1 : %d points",nb_points);
+    fscanf(file,"%d",nb_points);
+    exit(1);
+  }
+  __clear_screen();
+  if(return_main == 1)
+  {
+    fprintf(file,"user_1 : %d",nb_points);
+    fscanf(file,"%d",nb_points);
   puts("\n-------------------------LOG-PANEL------------------------------\n");
   puts("\nIdentifiant :  ");
   scanf("%s",username);
@@ -263,26 +270,29 @@ void        __log_session(int nb_points)
   if(strcmp(username,user_1) == 0 && strcmp(password,pass_1) == 0)
   {
     printf("Vous êtes connecté '%s' !\n", user_1);
-    printf("Et vous avez toujours %d points !\n\n",nb_points);
-    exit(1);
-  } else
+    printf("Et vous avez toujours '%d' points !\n\n",nb_points);
+  }
+  else
   {
     printf("Aucun '%s' dans notre base de donnée ! Désolée ...\n", username);
     exit(1);
   }
   __clear_screen();
+  }
 }
 
 int main()
 {
-  __log_session(WIN_POINTS);
+  __log_session(WIN_POINTS,1);
 
-  char *main_buffer = (char *) malloc(sizeof(BUFF_SIZE)*1);
+  char main_buffer[BUFF_SIZE+1];
+
      puts("\n[-] Liste des challenges\n");
      puts("\n[-] Valider un challenge\n");
      puts("\n[-] Informations\n");
      puts("Choix (1,2 ou 3) :  ");
-     fgets(main_buffer,BUFF_SIZE,stdin);
+     scanf("%s",main_buffer);
+
      switch(*main_buffer)
      {
        case '1':
