@@ -1,8 +1,8 @@
 // DEVELOPED by ghozt123 
 // SSP : [X]
 // ASLR : [X]
-// HX : [X]
-// SX : [X]
+// HNX : [X]
+// SNX : [X]
 
 #include <stdlib.h>
 #include <stdio.h>
