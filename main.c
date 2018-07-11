@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ******************************************************************************************/
-// DEVELOPED by ghozt123
+// DEVELOPED by wil.tor
 
 
 #include <stdio.h>
